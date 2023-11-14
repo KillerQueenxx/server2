@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    
+</head>
+
+<body>
+    <div>
+        <h1>Chat</h1>
+        <div id="chat-messages">
+            
+        </div>
+        <div>
+            <input type="text" id="user" placeholder="Tu nombre de usuario">
+            <input type="text" id="message" placeholder="Escribe tu mensaje">
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+    <script>
+        const socket = io(); 
+
+        
+        function sendMessage() {
+            const user = document.getElementById('user').value;
+            const message = document.getElementById('message').value;
+            socket.emit('chatMessage', { user, message });
+        }
+
+        // Función para mostrar mensajes en la interfaz
+        function showMessage(message) {
+            const chatMessages = document.getElementById('chat-messages');
+            const newMessage = document.createElement('p');
+            newMessage.textContent = `${message.user}: ${message.message}`;
+            chatMessages.appendChild(newMessage);
+        }
+
+        // Escuchar eventos de nuevos mensajes desde el servidor
+        socket.on('chatMessage', (message) => {
+            showMessage(message);
+        });
+    </script>
+</body>
+
+</html>
